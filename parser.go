@@ -19,7 +19,6 @@ func NewParser(file, host string) *Parser {
 func (p *Parser) Parse() map[string]map[string]string {
 	var seen bool
 	ret := make(map[string]map[string]string)
-	var host string
 	file, err := os.Open(p.file)
 	if err != nil {
 		log.Fatal(err)
@@ -36,10 +35,9 @@ func (p *Parser) Parse() map[string]map[string]string {
 		fields := strings.Fields(line)
 
 		if fields[0] == "Host" {
-			if fields[1] == p.host {
+			if hostlineIncludes(fields, p.host) {
 				seen = true
-				host = strings.Join(fields[1:], " ")
-				ret[host] = make(map[string]string)
+				ret[p.host] = make(map[string]string)
 				continue
 			} else if seen {
 				break
@@ -47,9 +45,19 @@ func (p *Parser) Parse() map[string]map[string]string {
 		}
 
 		if seen {
-			ret[host][fields[0]] = strings.Join(fields[1:], " ")
+			ret[p.host][fields[0]] = strings.Join(fields[1:], " ")
 		}
 	}
 
 	return ret
+}
+
+func hostlineIncludes(hostline []string, s string) bool {
+	for _, x := range hostline {
+		if x == s {
+			return true
+		}
+	}
+
+	return false
 }
