@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -19,12 +20,13 @@ func NewParser(file, host string) *Parser {
 func (p *Parser) Parse() map[string]map[string]string {
 	var seen bool
 	ret := make(map[string]map[string]string)
+
 	file, err := os.Open(p.file)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
@@ -33,28 +35,34 @@ func (p *Parser) Parse() map[string]map[string]string {
 			continue
 		}
 		fields := strings.Fields(line)
+		keyword := fields[0]
+		arguments := fields[1:]
 
-		if fields[0] == "Host" {
-			if hostlineIncludes(fields, p.host) {
+		if keyword == "Host" {
+			if hostlineIncludes(arguments, p.host) {
 				seen = true
-				ret[p.host] = make(map[string]string)
 				continue
-			} else if seen {
-				break
+			} else {
+				seen = false
 			}
 		}
 
 		if seen {
-			ret[p.host][fields[0]] = strings.Join(fields[1:], " ")
+			if ret[p.host] == nil {
+				ret[p.host] = make(map[string]string)
+			}
+			ret[p.host][keyword] = strings.Join(arguments, " ")
 		}
 	}
 
 	return ret
 }
 
-func hostlineIncludes(hostline []string, s string) bool {
-	for _, x := range hostline {
-		if x == s {
+func hostlineIncludes(hostline []string, host string) bool {
+	for _, field := range hostline {
+		replaced := strings.Replace(field, "*", ".*", 1)
+		pattern := regexp.MustCompile(replaced)
+		if pattern.MatchString(host) {
 			return true
 		}
 	}
