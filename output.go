@@ -6,26 +6,26 @@ import (
 )
 
 type Output struct {
-	config   map[string]string
+	result   Result
 	hostOnly bool
 	format   string
 }
 
-func NewOutput(config map[string]string, hostOnly bool, format string) *Output {
-	return &Output{config: config, hostOnly: hostOnly, format: format}
+func NewOutput(result Result, hostOnly bool, format string) *Output {
+	return &Output{result: result, hostOnly: hostOnly, format: format}
 }
 
 func (o *Output) Format() string {
 
 	if o.hostOnly {
-		return o.config["Hostname"]
+		return o.result.Options["Hostname"]
 	}
 
 	switch o.format {
 	case "plain":
-		return fmt.Sprintf("%v", o.config)
+		return fmt.Sprintf("%v", o.result)
 	case "json":
-		ret, err := json.Marshal(o.config)
+		ret, err := json.Marshal(o.result)
 		if err == nil {
 			return string(ret)
 		}

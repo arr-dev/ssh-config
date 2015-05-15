@@ -8,8 +8,9 @@ import (
 func TestParser(t *testing.T) {
 	p := NewParser("testdata/ssh.conf", "github.com")
 	got := p.Parse()
-	expected := map[string]map[string]string{
-		"github.com": map[string]string{
+	expected := Result{
+		Host: "github.com",
+		Options: map[string]string{
 			"ServerAliveInterval":      "60",
 			"Hostname":                 "github.com",
 			"PreferredAuthentications": "publickey",
@@ -23,8 +24,9 @@ func TestParser(t *testing.T) {
 func TestParserHostWildCard(t *testing.T) {
 	p := NewParser("testdata/ssh.conf", "example.com")
 	got := p.Parse()
-	expected := map[string]map[string]string{
-		"example.com": map[string]string{
+	expected := Result{
+		Host: "example.com",
+		Options: map[string]string{
 			"ServerAliveInterval": "60",
 			"Hostname":            "ssh.example.com",
 			"Username":            "test",

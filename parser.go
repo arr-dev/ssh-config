@@ -13,13 +13,18 @@ type Parser struct {
 	host string
 }
 
+type Result struct {
+	Host    string
+	Options map[string]string
+}
+
 func NewParser(file, host string) *Parser {
 	return &Parser{file: file, host: host}
 }
 
-func (p *Parser) Parse() map[string]map[string]string {
+func (p *Parser) Parse() Result {
 	var seen bool
-	ret := make(map[string]map[string]string)
+	ret := Result{}
 
 	file, err := os.Open(p.file)
 	if err != nil {
@@ -41,6 +46,7 @@ func (p *Parser) Parse() map[string]map[string]string {
 		if keyword == "Host" {
 			if hostlineIncludes(arguments, p.host) {
 				seen = true
+				ret.Host = p.host
 				continue
 			} else {
 				seen = false
@@ -48,10 +54,10 @@ func (p *Parser) Parse() map[string]map[string]string {
 		}
 
 		if seen {
-			if ret[p.host] == nil {
-				ret[p.host] = make(map[string]string)
+			if ret.Options == nil {
+				ret.Options = make(map[string]string)
 			}
-			ret[p.host][keyword] = strings.Join(arguments, " ")
+			ret.Options[keyword] = strings.Join(arguments, " ")
 		}
 	}
 

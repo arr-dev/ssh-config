@@ -40,9 +40,9 @@ func main() {
 	host = flag.Arg(0)
 
 	p := NewParser(file, host)
-	config := p.Parse()
+	result := p.Parse()
 
-	o := NewOutput(config[host], hostOnly, format)
+	o := NewOutput(result, hostOnly, format)
 
 	fmt.Println(o.Format())
 }
