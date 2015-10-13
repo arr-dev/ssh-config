@@ -11,6 +11,13 @@ Go app to parse [ssh_config(5)](http://linux.die.net/man/5/ssh_config) for given
     ssh-config [options] HOSTNAME
 
     Options:
-        -f, -file       SSH config file to parse, defaults to ~/.ssh/config
-        -h, -hostonly   Outputs only Hostname from config
-        -format         Output format. "json" or default "plain"
+      -f string
+            Output format, p|plain, j|json, pretty (default "plain")
+      -format string
+            Output format, p|plain, j|json, pretty (default "plain")
+      -file string
+            SSH config file to parse (default "~/.ssh/config")
+      -h    Output only Hostname from config
+      -hostonly
+            Output only Hostname from config
+

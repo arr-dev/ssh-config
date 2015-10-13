@@ -19,7 +19,7 @@ func main() {
 
 	flag.StringVar(&file, "file", defaultFile, "SSH config file to parse")
 	flag.StringVar(&format, "f", "plain", "Output format, p|plain, j|json, pretty")
-	flag.StringVar(&format, "format", "plain", "Output format, plain, json")
+	flag.StringVar(&format, "format", "plain", "Output format, p|plain, j|json, pretty")
 	flag.BoolVar(&hostOnly, "h", false, "Output only Hostname from config")
 	flag.BoolVar(&hostOnly, "hostonly", false, "Output only Hostname from config")
 
