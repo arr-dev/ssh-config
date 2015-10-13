@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"strings"
 	"testing"
 )
 
@@ -12,7 +10,9 @@ var result = Result{
 		"Hostname":                 "github.com",
 		"PreferredAuthentications": "publickey",
 		"ServerAliveInterval":      "60",
-	}}
+	},
+	OptionKeys: []string{"Hostname", "PreferredAuthentications", "ServerAliveInterval"},
+}
 
 func TestOutputPlain(t *testing.T) {
 
@@ -21,8 +21,32 @@ func TestOutputPlain(t *testing.T) {
 
 	o := NewOutput(result, hostOnly, format)
 	got := o.Format()
-	if !strings.Contains(got, "map") && !strings.Contains(got, "Hostname:github.com") {
-		t.Error("Expected ", got, "to include Hostname")
+	expected :=
+		`Host github.com
+    Hostname github.com
+    PreferredAuthentications publickey
+    ServerAliveInterval 60
+`
+	if got != expected {
+		t.Error("Expected ", got, "to match ", expected)
+	}
+}
+
+func TestOutputPretty(t *testing.T) {
+
+	hostOnly := false
+	format := "pretty"
+
+	o := NewOutput(result, hostOnly, format)
+	got := o.Format()
+	expected :=
+		`Host                         github.com
+    Hostname                 github.com
+    PreferredAuthentications publickey
+    ServerAliveInterval      60
+`
+	if got != expected {
+		t.Error("Expected ", got, "to match ", expected)
 	}
 }
 
@@ -45,7 +69,8 @@ func TestOutputJson(t *testing.T) {
 
 	o := NewOutput(result, hostOnly, format)
 	got := o.Format()
-	if j, _ := json.Marshal(result); string(j) != got {
-		t.Error("Expected JSON", "Got ", got)
+	expected := `{"Host":"github.com","Options":{"Hostname":"github.com","PreferredAuthentications":"publickey","ServerAliveInterval":"60"}}`
+	if got != expected {
+		t.Error("Expected ", expected, "Got ", got)
 	}
 }

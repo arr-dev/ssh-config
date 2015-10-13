@@ -11,10 +11,11 @@ func TestParser(t *testing.T) {
 	expected := Result{
 		Host: "github.com",
 		Options: map[string]string{
-			"ServerAliveInterval":      "60",
 			"Hostname":                 "github.com",
 			"PreferredAuthentications": "publickey",
+			"ServerAliveInterval":      "60",
 		},
+		OptionKeys: []string{"Hostname", "PreferredAuthentications", "ServerAliveInterval"},
 	}
 	if !reflect.DeepEqual(got, expected) {
 		t.Error("Expected ", expected, "Got ", got)
@@ -27,10 +28,11 @@ func TestParserHostWildCard(t *testing.T) {
 	expected := Result{
 		Host: "example.com",
 		Options: map[string]string{
-			"ServerAliveInterval": "60",
 			"Hostname":            "ssh.example.com",
+			"ServerAliveInterval": "60",
 			"Username":            "test",
 		},
+		OptionKeys: []string{"Hostname", "ServerAliveInterval", "Username"},
 	}
 	if !reflect.DeepEqual(got, expected) {
 		t.Error("Expected ", expected, "Got ", got)
