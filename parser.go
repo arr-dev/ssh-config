@@ -67,7 +67,7 @@ func (p *Parser) Parse() Result {
 func hostlineIncludes(hostline []string, host string) bool {
 	for _, field := range hostline {
 		replaced := strings.Replace(field, "*", ".*", 1)
-		pattern := regexp.MustCompile(replaced)
+		pattern := regexp.MustCompile("^" + replaced + "$")
 		if pattern.MatchString(host) {
 			return true
 		}
