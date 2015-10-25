@@ -38,3 +38,19 @@ func TestParserHostWildCard(t *testing.T) {
 		t.Error("Expected ", expected, "Got ", got)
 	}
 }
+
+func TestParserHostIgnoresWildCardAnywhere(t *testing.T) {
+	p := NewParser("testdata/ssh.conf", "another-example")
+	got := p.Parse()
+	expected := Result{
+		Host: "another-example",
+		Options: map[string]string{
+			"ServerAliveInterval": "60",
+			"Username":            "other",
+		},
+		OptionKeys: []string{"ServerAliveInterval", "Username"},
+	}
+	if !reflect.DeepEqual(got, expected) {
+		t.Error("Expected ", expected, "Got ", got)
+	}
+}
