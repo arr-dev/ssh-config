@@ -48,6 +48,7 @@ func TestParserHostIgnoresWildCardAnywhere(t *testing.T) {
 			"ServerAliveInterval": "60",
 			"Username":            "other",
 		},
+		OptionKeys: []string{"ServerAliveInterval", "Username"},
 	}
 	if !reflect.DeepEqual(got, expected) {
 		t.Error("Expected ", expected, "Got ", got)
