@@ -35,7 +35,7 @@ func (p *Parser) Parse() Result {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
+		line := cleanLine(scanner.Text())
 		if line == "" {
 			continue
 		}
@@ -74,4 +74,13 @@ func hostlineIncludes(hostline []string, host string) bool {
 	}
 
 	return false
+}
+
+func cleanLine(line string) string {
+	i := strings.Index(strings.TrimSpace(line), "#")
+	if i < 0 {
+		return line
+	} else {
+		return line[0:i]
+	}
 }
