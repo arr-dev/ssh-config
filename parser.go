@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -14,8 +15,9 @@ type Parser struct {
 }
 
 type Result struct {
-	Host    string
-	Options map[string]string
+	Host       string
+	Options    map[string]string
+	OptionKeys []string `json:"-"`
 }
 
 func NewParser(file, host string) *Parser {
@@ -58,8 +60,11 @@ func (p *Parser) Parse() Result {
 				ret.Options = make(map[string]string)
 			}
 			ret.Options[keyword] = strings.Join(arguments, " ")
+			ret.OptionKeys = append(ret.OptionKeys, keyword)
 		}
 	}
+
+	sort.Strings(ret.OptionKeys)
 
 	return ret
 }
