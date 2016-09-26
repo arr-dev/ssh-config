@@ -82,7 +82,9 @@ func hostlineIncludes(hostline []string, host string) bool {
 }
 
 func cleanLine(line string) string {
-	i := strings.Index(strings.TrimSpace(line), "#")
+	line = strings.TrimSpace(line)
+
+	i := strings.Index(line, "#")
 	if i < 0 {
 		return line
 	} else {
